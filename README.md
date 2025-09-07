@@ -46,11 +46,11 @@ Builds and starts all the services
    ii. Run:
    ```bash
    ./deploy.sh
-   ````
+   ```
    If on Windows, you can as well use:  
    ```bash
    bash ./deploy.sh
-   ````
+   ```
     after opening cloned directory in PowerShell terminal.
 
 
