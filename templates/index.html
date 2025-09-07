@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Processing - Medical Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white font-sans">
+    <!-- Navigation Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-hospital text-2xl text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-semibold">Medical Referral System</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/referral" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium">
+                        <i class="fas fa-clipboard-list mr-2"></i>Referrals
+                    </a>
+                    <a class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors" href="/patient_search">
+                        <i class="fas fa-search mr-2"></i>Search Patients
+                    </a>
+                    {% if user.role == 'admin' %}
+                    <a href="/admin" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-300">{{ user.full_name or user.username }}</span>
+                    </div>
+                    <a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="ml-1 text-sm font-medium text-white md:ml-2">Referral Processing</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <!-- Page Header with Action Buttons -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-3xl font-bold text-white">AI-Powered Referral Processing</h2>
+                <p class="text-gray-300 mt-2">Medical case prioritization and analysis system</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="clearAllForms()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-eraser mr-2"></i>Clear All
+                </button>
+                <a href="/dashboard" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-home mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            
+            <!-- Upload Image Card -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20">
+                <h2 class="text-xl font-semibold text-purple-400 mb-4">📤 Upload Image (Optional)</h2>
+                
+                <button id="upload-btn" class="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-md transition-all">
+                    📸 Click to Upload
+                </button>
+                
+                <input type="file" id="image-upload" accept="image/*" class="hidden" />
+                
+                <div id="image-container" class="hidden mt-4">
+                    <img id="display-image" src="" alt="Uploaded image" class="w-full rounded-lg shadow-lg" />
+                    <button onclick="clearImage()" class="mt-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded">
+                        Clear Image
+                    </button>
+                </div>
+            </div>
+
+            <!-- Patient Details Form -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20">
+                <h2 class="text-xl font-semibold text-blue-400 mb-4">🏥 Patient Details</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="patient-id" placeholder="Patient ID/Hospital Number"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <input type="text" id="patient-name" placeholder="Patient Name"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <input type="number" id="patient-age" placeholder="Age"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <select id="patient-sex" class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                        <option value="">Select Sex</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="patient-address" placeholder="Address"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <input type="text" id="referring-location" placeholder="Referring location"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <input type="text" id="staff-name" placeholder="Referring team/Dr/Staff name"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    <input type="text" id="specialty-data" placeholder="Specialty data (e.g., Parity for O&G patients)"
+                           class="p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500 md:col-span-2">                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Entry Section -->
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20 mb-8">
+            <h2 class="text-xl font-semibold text-green-400 mb-4">📋 Case Entry</h2>
+            
+            <div class="mb-4">
+                <textarea id="case-input" rows="3" placeholder="Enter diagnosis/symptoms for a case"
+                    class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg shadow border border-gray-600 focus:border-green-500"></textarea>
+                <div class="flex gap-2 mt-2">
+                    <button id="add-case" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                        ➕ Add Case
+                    </button>
+                    <button onclick="clearCases()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                        Clear Cases
+                    </button>
+                </div>
+            </div>
+            
+            <ul id="case-list" class="mb-4 space-y-2"></ul>
+            
+            <button id="submit-all-cases" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-all">
+                🚀 Submit All Cases for Prioritization
+            </button>
+        </div>
+
+        <!-- Ask Question Section -->
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20 mb-8">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">💬 Ask Questions</h2>
+            <textarea id="query-input" name="query" rows="4" placeholder="Enter your medical question or ask about referral prioritization"
+                class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg shadow border border-gray-600 focus:border-blue-500"></textarea>
+            <button id="submit-query" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg mt-3 transition-all">
+                🚀 Submit Query
+            </button>
+        </div>
+        
+        <!-- AI Responses Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Llama Response -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20">
+                <h2 class="text-xl font-semibold text-green-400">🤖 Llama-3.2-11b Vision Response</h2>
+                <div id="response-container-llama11b" class="hidden mt-4 bg-gray-800 p-4 rounded-lg text-gray-300 max-h-96 overflow-y-auto"></div>
+            </div>
+            
+            <!-- Llava(later deprecated) Response -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20">
+                <h2 class="text-xl font-semibold text-green-400">🤖 Llama-3.2-90b Vision Response</h2>
+                <div id="response-container-llama90b" class="hidden mt-4 bg-gray-800 p-4 rounded-lg text-gray-300 max-h-96 overflow-y-auto"></div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-container" class="hidden mt-8 p-4 bg-red-500/20 border border-red-500 rounded-lg">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>
+                <p id="error-text" class="text-red-300"></p>
+            </div>
+        </div>
+
+        <!-- Referral Prioritization Results -->
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-yellow-400/40 mt-8">
+            <h2 class="text-xl font-semibold text-yellow-400 mb-4">🏥➡️🧑‍⚕️ Referral Prioritization Results</h2>
+            <div id="referral-priority-container" class="hidden mt-4 bg-gray-800 p-4 rounded-lg text-gray-300 max-h-96 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Case Entry Logic ---
+            let cases = [];
+            
+            // Referrals Context storage for follow-up questions
+            let lastReferralContext = "";
+
+            // Collection of patient data from form fields
+            function collectPatientData() {
+                return {
+                    patientId: document.getElementById('patient-id').value.trim(),
+                    patientName: document.getElementById('patient-name').value.trim(),
+                    age: document.getElementById('patient-age').value.trim(),
+                    sex: document.getElementById('patient-sex').value.trim(),
+                    address: document.getElementById('patient-address').value.trim(),
+                    referringLocation: document.getElementById('referring-location').value.trim(),
+                    teamAndStaffName: document.getElementById('staff-name').value.trim(),
+                    specialtyData: document.getElementById('specialty-data').value.trim()
+                };
+            }
+
+            const caseInput = document.getElementById('case-input');
+            const addCaseBtn = document.getElementById('add-case');
+            const caseList = document.getElementById('case-list');
+            const submitAllCasesBtn = document.getElementById('submit-all-cases');
+
+            // Add case functionality
+            addCaseBtn.addEventListener('click', () => {
+                const caseText = caseInput.value.trim();
+                const currentPatientData = collectPatientData();
+                
+                if (caseText) {
+                    cases.push({
+                        case: caseText,
+                        patientData: currentPatientData
+                    });
+                    updateCaseList();
+                    caseInput.value = '';
+                } else {
+                    showError('⚠️ Please enter case details before adding.');
+                }
+            });
+
+            function updateCaseList() {
+                caseList.innerHTML = '';
+                cases.forEach((item, i) => {
+                    const li = document.createElement('li');
+                    li.className = 'bg-gray-700 p-3 rounded-lg border border-gray-600';
+                    li.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <strong class="text-white">Case ${i + 1}:</strong> <span class="text-gray-300">${item.case}</span><br>
+                                <small class="text-gray-400">Patient: ${item.patientData.patientName || 'N/A'} (ID: ${item.patientData.patientId || 'N/A'})</small>
+                            </div>
+                            <button onclick="removeCase(${i})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">
+                                Remove
+                            </button>
+                        </div>
+                    `;
+                    caseList.appendChild(li);
+                });
+            }
+
+            // Global functions for navigation and clearing
+            window.removeCase = function(index) {
+                cases.splice(index, 1);
+                updateCaseList();
+            };
+
+            window.clearCases = function() {
+                cases = [];
+                updateCaseList();
+                caseInput.value = '';
+            };
+
+            window.clearImage = function() {
+                document.getElementById('image-upload').value = '';
+                document.getElementById('image-container').classList.add('hidden');
+            };
+
+            window.clearAllForms = function() {
+                // Clear cases
+                cases = [];
+                updateCaseList();
+                caseInput.value = '';
+                
+                // Clear patient data
+                document.getElementById('patient-id').value = '';
+                document.getElementById('patient-name').value = '';
+                document.getElementById('patient-age').value = '';
+                document.getElementById('patient-sex').value = '';
+                document.getElementById('patient-address').value = '';
+                document.getElementById('referring-location').value = '';
+                document.getElementById('staff-name').value = '';
+                document.getElementById('specialty-data').value = '';
+                
+                // Clear query
+                document.getElementById('query-input').value = '';
+                
+                // Clear image
+                clearImage();
+                
+                // Hide responses
+                document.getElementById('response-container-llama11b').classList.add('hidden');
+                document.getElementById('response-container-llama90b').classList.add('hidden');
+                document.getElementById('referral-priority-container').classList.add('hidden');
+                document.getElementById('error-container').classList.add('hidden');
+                
+                // Clear context
+                lastReferralContext = "";
+            };
+
+            // Submit all cases for referral prioritization
+            submitAllCasesBtn.addEventListener('click', async () => {
+                if (cases.length === 0) {
+                    showError('⚠️ Please add at least one case.');
+                    return;
+                }
+
+                const formattedQuery = cases.map((item, i) => {
+                    const pd = item.patientData;
+                    return `Case ${i + 1}: ${item.case}
+    Patient ID: ${pd.patientId}
+    Name: ${pd.patientName}
+    Age: ${pd.age}
+    Sex: ${pd.sex}
+    Address: ${pd.address}
+    Referring from: ${pd.referringLocation}
+    Team/Staff Name: ${pd.teamAndStaffName}
+    Specialty Data: ${pd.specialtyData}`;
+                }).join('\n\n');
+
+                const image = imageUpload.files[0] || null;
+                const formData = new FormData();
+                if (image) {
+                    formData.append('image', image);
+                }
+                formData.append('query', formattedQuery);
+                formData.append('request_type', 'referral');
+
+                try {
+                    submitAllCasesBtn.disabled = true;
+                    submitAllCasesBtn.textContent = 'Processing... ⏳';
+
+                    const response = await fetch('/upload_and_query', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.detail || 'An error occurred while processing your request.');
+                    }
+
+                    responseLlama.innerHTML = marked.parse(result.llama);
+                    responseLlama.classList.remove('hidden');
+                    responseLlava.innerHTML = marked.parse(result.llava);
+                    responseLlava.classList.remove('hidden');
+                    
+                    if (result.referral_priority) {
+                        referralPriority.innerHTML = marked.parse(result.referral_priority);
+                        referralPriority.classList.remove('hidden');
+                        lastReferralContext = `Original Cases:\n${formattedQuery}\n\nReferral Prioritisation Result:\n${result.referral_priority}`;
+                    } else {
+                        referralPriority.classList.add('hidden');
+                    }
+                    errorContainer.classList.add('hidden');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError(error.message);
+                } finally {
+                    submitAllCasesBtn.disabled = false;
+                    submitAllCasesBtn.textContent = '🚀 Submit All Cases for Prioritization';
+                }
+            });
+
+            // Image upload and query logic
+            const uploadBtn = document.getElementById('upload-btn');
+            const imageUpload = document.getElementById('image-upload');
+            const displayImage = document.getElementById('display-image');
+            const imageContainer = document.getElementById('image-container');
+            const queryInput = document.getElementById('query-input');
+            const submitQuery = document.getElementById('submit-query');
+            const responseLlama = document.getElementById('response-container-llama11b');
+            const responseLlava = document.getElementById('response-container-llama90b');
+            const errorContainer = document.getElementById('error-container');
+            const errorText = document.getElementById('error-text');
+            const referralPriority = document.getElementById('referral-priority-container');
+
+            uploadBtn.addEventListener('click', () => {
+                imageUpload.click();
+            });
+
+            imageUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        displayImage.src = e.target.result;
+                        imageContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Submit query
+            submitQuery.addEventListener('click', async () => {
+                const image = imageUpload.files[0] || null;
+                const query = queryInput.value;
+
+                if (!query) {
+                    showError('⚠️ Please enter a query.');
+                    return;
+                }
+
+                // Check if question is related to referral prioritization
+                const isContextAware = lastReferralContext && (
+                    query.toLowerCase().includes('rank') ||
+                    query.toLowerCase().includes('priorit') ||
+                    query.toLowerCase().includes('urgent') ||
+                    query.toLowerCase().includes('why') ||
+                    query.toLowerCase().includes('case') ||
+                    query.toLowerCase().includes('referral') ||
+                    query.toLowerCase().includes('explain') ||
+                    query.toLowerCase().includes('reasoning') ||
+                    query.toLowerCase().includes('decision') ||
+                    query.toLowerCase().includes('higher') ||
+                    query.toLowerCase().includes('lower') ||
+                    query.toLowerCase().includes('first') ||
+                    query.toLowerCase().includes('most') ||
+                    query.toLowerCase().includes('emergent') ||
+                    query.toLowerCase().includes('routine')
+                );
+
+                const formData = new FormData();
+                if (image) {
+                    formData.append('image', image);
+                }
+                formData.append('query', query);
+                
+                if (isContextAware) {
+                    formData.append('request_type', 'context_aware');
+                    formData.append('context_data', lastReferralContext);
+                } else {
+                    formData.append('request_type', 'general');
+                }
+
+                try {
+                    submitQuery.disabled = true;
+                    submitQuery.textContent = 'Processing... ⏳';
+
+                    const response = await fetch('/upload_and_query', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.detail || 'An error occurred while processing your request.');
+                    }
+
+                    responseLlama.innerHTML = marked.parse(result.llama);
+                    responseLlama.classList.remove('hidden');
+                    responseLlava.innerHTML = marked.parse(result.llava);
+                    responseLlava.classList.remove('hidden');
+                    
+                    if (result.referral_priority) {
+                        referralPriority.innerHTML = marked.parse(result.referral_priority);
+                        referralPriority.classList.remove('hidden');
+                    }
+                    errorContainer.classList.add('hidden');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError(error.message);
+                } finally {
+                    submitQuery.disabled = false;
+                    submitQuery.textContent = '🚀 Submit Query';
+                }
+            });
+
+            // Error handling
+            function showError(message) {
+                errorText.textContent = message;
+                errorContainer.classList.remove('hidden');
+                responseLlama.classList.add('hidden');
+                responseLlava.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Medical Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white">
+    <!-- Navigation Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-hospital text-2xl text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-semibold">Medical Referral System</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/referral" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-clipboard-list mr-2"></i>Referrals
+                    </a>
+                    {% if user.role == 'admin' %}
+                    <a href="/admin" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </a>
+                    {% endif %}
+                    <a class="nav-link" href="/patient_search">
+                        <i class="fas fa-search"></i> Search Patients
+                    </a>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-300">Welcome, </span>
+                        <span class="font-medium">{{ user.full_name or user.username }}</span>
+                    </div>
+                    <a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Dashboard Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-white">Dashboard</h2>
+            <p class="text-gray-300 mt-2">Medical referral prioritization and management system</p>
+        </div>
+
+        <!-- Quick Actions Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- New Referral Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">New Referral</h3>
+                        <p class="text-gray-300 text-sm mt-1">Process new patient referrals</p>
+                    </div>
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-plus text-xl text-white"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="/referral" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-arrow-right mr-2"></i>Start Referral
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Referrals Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Recent Referrals</h3>
+                        <p class="text-gray-300 text-sm mt-1">View recent processed cases</p>
+                    </div>
+                    <div class="bg-green-600 p-3 rounded-lg">
+                        <i class="fas fa-history text-xl text-white"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-list mr-2"></i>View History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Statistics</h3>
+                        <p class="text-gray-300 text-sm mt-1">System usage overview</p>
+                    </div>
+                    <div class="bg-purple-600 p-3 rounded-lg">
+                        <i class="fas fa-chart-bar text-xl text-white"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-analytics mr-2"></i>View Stats
+                    </button>
+                </div>
+            </div>
+
+            <!-- Manage Referrals Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Manage Referrals</h3>
+                        <p class="text-gray-300 text-sm">Search, sort, and manage existing referrals</p>
+                    </div>
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-database text-xl text-white"></i>
+                    </div>
+                </div>
+                <a href="/referrals/management" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors inline-block text-center">
+                    <i class="fas fa-search mr-2"></i>View & Search Referrals
+                </a>
+            </div>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+            <h3 class="text-xl font-semibold text-white mb-4">User Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Full Name</label>
+                    <p class="text-white">{{ user.full_name or 'Not set' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Username</label>
+                    <p class="text-white">{{ user.username }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Department</label>
+                    <p class="text-white">{{ user.department or 'Not set' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Role</label>
+                    <p class="text-white capitalize">{{ user.role }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Hospital ID</label>
+                    <p class="text-white">{{ user.hospital_id or 'Not set' }}</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300">Last Login</label>
+                    <p class="text-white">{{ user.last_login or 'First login' }}</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

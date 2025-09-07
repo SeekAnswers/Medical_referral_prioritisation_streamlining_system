@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Search - Medical Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white font-sans">
+    <!-- Navigation Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-hospital text-2xl text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-semibold">Medical Referral System</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/referral" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-clipboard-list mr-2"></i>Referrals
+                    </a>
+                    <a class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium" href="/patient_search">
+                        <i class="fas fa-search mr-2"></i>Search Patients
+                    </a>
+                    <a href="/referrals/management" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-list-alt mr-2"></i>Manage Referrals
+                    </a>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-300">Welcome, User</span>
+                    </div>
+                    <a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="ml-1 text-sm font-medium text-white md:ml-2">Patient Search</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <!-- Page Header with Action Buttons -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-3xl font-bold text-white">Patient Referral Search</h2>
+                <p class="text-gray-300 mt-2">Find patient referrals by name, ID, location, or case details</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="clearSearch()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-eraser mr-2"></i>Clear Search
+                </button>
+                <a href="/dashboard" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-home mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Search Form -->
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20 mb-8">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">
+                <i class="fas fa-magnifying-glass mr-2"></i>Search Patient Records
+            </h2>
+            
+            <form id="searchForm" class="space-y-4">
+                <div class="flex flex-col lg:flex-row gap-4">
+                    <input type="text" 
+                           id="searchQuery" 
+                           placeholder="Enter patient name, ID, staff name, location, or case details..." 
+                           required
+                           autocomplete="off"
+                           class="flex-1 p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                    <button type="submit" 
+                            class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-all flex items-center justify-center">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+                
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-blue-200">
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-blue-400 mr-2 mt-0.5"></i>
+                        <div>
+                            <strong class="text-blue-300">Search Tips:</strong>
+                            <p class="text-sm mt-1">You can search by patient name, patient ID, referring staff, hospital location, or any text from case descriptions. Partial matches work too!</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Loading Container -->
+        <div id="loadingContainer" class="hidden bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-lg border border-white/20 text-center mb-8">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mb-4"></div>
+            <h5 class="text-lg font-semibold text-blue-400 mb-2">Searching patient records...</h5>
+            <p class="text-gray-300">Please wait while we find matching referrals</p>
+        </div>
+
+        <!-- Search Results Container -->
+        <div id="searchResults"></div>
+
+        <!-- Error Container -->
+        <div id="errorContainer" class="hidden bg-red-500/20 border border-red-500 rounded-xl p-6 mb-8">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-400 mr-3 text-xl"></i>
+                <div>
+                    <h4 class="text-red-300 font-semibold mb-1">Search Error</h4>
+                    <p id="errorText" class="text-red-300"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const searchQuery = document.getElementById('searchQuery');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const searchResults = document.getElementById('searchResults');
+            const errorContainer = document.getElementById('errorContainer');
+            const errorText = document.getElementById('errorText');
+
+            // Auto-focus search input
+            searchQuery.focus();
+
+            // Clear search function
+            window.clearSearch = function() {
+                searchQuery.value = '';
+                searchResults.innerHTML = '';
+                loadingContainer.classList.add('hidden');
+                errorContainer.classList.add('hidden');
+                searchQuery.focus();
+            };
+
+            // Search form submission
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const query = searchQuery.value.trim();
+                if (!query) {
+                    showError('Please enter a search term');
+                    return;
+                }
+
+                // Show loading
+                loadingContainer.classList.remove('hidden');
+                searchResults.innerHTML = '';
+                errorContainer.classList.add('hidden');
+
+                try {
+                    const formData = new FormData();
+                    formData.append('query', query);
+
+                    const response = await fetch('/search_patient', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    loadingContainer.classList.add('hidden');
+
+                    if (data.found) {
+                        displayResults(data.results, data.search_query, data.total_results);
+                    } else {
+                        displayNoResults(data.message, data.suggestions || []);
+                    }
+
+                } catch (error) {
+                    loadingContainer.classList.add('hidden');
+                    showError('Search failed: ' + error.message);
+                }
+            });
+
+            function displayResults(results, searchQuery, totalResults) {
+                let html = `
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-white/20 overflow-hidden">
+                        <div class="bg-green-600 p-4 border-b border-white/20">
+                            <h5 class="text-white font-semibold flex items-center">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Found ${totalResults} referral${totalResults !== 1 ? 's' : ''} matching "${searchQuery}"
+                            </h5>
+                        </div>
+                `;
+
+                results.forEach((result, index) => {
+                    const urgencyColor = getUrgencyColor(result.urgency_level);
+                    
+                    html += `
+                        <div class="p-6 border-b border-white/10 last:border-b-0 hover:bg-white/5 transition-colors">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Patient Information -->
+                                <div class="lg:col-span-2">
+                                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                                        <h3 class="text-xl font-semibold text-blue-400 flex items-center">
+                                            <i class="fas fa-user-injured mr-2"></i>
+                                            ${result.patient_name}
+                                        </h3>
+                                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                            ID: ${result.patient_id}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="text-gray-300 mb-3 space-y-1">
+                                        <p class="flex items-center">
+                                            <i class="fas fa-user-md w-4 mr-2 text-gray-400"></i>
+                                            <strong class="mr-2">Staff:</strong> ${result.staff_name}
+                                        </p>
+                                        <p class="flex items-center">
+                                            <i class="fas fa-map-marker-alt w-4 mr-2 text-gray-400"></i>
+                                            <strong class="mr-2">Location:</strong> ${result.referring_location}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="bg-gray-800/50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                                        <strong class="text-cyan-300 block mb-2">Case Summary:</strong>
+                                        <p class="text-gray-300 leading-relaxed">${result.case_summary}</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status and Badges -->
+                                <div class="space-y-4">
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-cyan-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                            <i class="fas fa-stethoscope mr-1"></i>
+                                            ${result.specialty}
+                                        </span>
+                                        <span class="${urgencyColor} text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                                            ${result.urgency_level}
+                                        </span>
+                                        <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                            <i class="fas fa-info-circle mr-1"></i>
+                                            ${result.status}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="bg-gray-800/30 rounded-lg p-3 text-sm text-gray-300 space-y-1">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar w-4 mr-2 text-gray-400"></i>
+                                            <strong class="mr-2">Referral:</strong> ${result.referral_date} ${result.referral_time}
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-clock w-4 mr-2 text-gray-400"></i>
+                                            <strong class="mr-2">Created:</strong> ${result.created_at}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                searchResults.innerHTML = html;
+            }
+
+            function displayNoResults(message, suggestions) {
+                let html = `
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-white/20 p-8 text-center">
+                        <div class="text-6xl text-gray-400 mb-6">
+                            <i class="fas fa-search-minus"></i>
+                        </div>
+                        <h4 class="text-2xl font-semibold text-gray-300 mb-4">No Results Found</h4>
+                        <p class="text-gray-400 mb-6">${message}</p>
+                `;
+
+                if (suggestions.length > 0) {
+                    html += `
+                        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-6 text-left max-w-2xl mx-auto">
+                            <h6 class="text-yellow-300 font-semibold mb-4 flex items-center">
+                                <i class="fas fa-lightbulb mr-2"></i>Search Suggestions:
+                            </h6>
+                            <ul class="space-y-2 text-yellow-200">
+                    `;
+
+                    suggestions.forEach(suggestion => {
+                        html += `<li class="flex items-start"><i class="fas fa-arrow-right text-yellow-400 mr-2 mt-1"></i>${suggestion}</li>`;
+                    });
+
+                    html += `
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+                searchResults.innerHTML = html;
+            }
+
+            function showError(message) {
+                errorText.textContent = message;
+                errorContainer.classList.remove('hidden');
+                searchResults.innerHTML = '';
+            }
+
+            function getUrgencyColor(urgencyLevel) {
+                const level = urgencyLevel.toLowerCase();
+                if (level.includes('emergent')) return 'bg-red-600';
+                if (level.includes('urgent')) return 'bg-orange-500';
+                return 'bg-green-600';
+            }
+        });
+    </script>
+</body>
+</html>

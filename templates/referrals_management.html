@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referrals Management - Medical Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white font-sans">
+    <!-- Navigation Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-hospital text-2xl text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-semibold">Medical Referral System</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/referral" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-clipboard-list mr-2"></i>New Referral
+                    </a>
+                    <a href="/referrals/management" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium">
+                        <i class="fas fa-database mr-2"></i>Manage Referrals
+                    </a>
+                    {% if user.role == 'admin' %}
+                    <a href="/admin" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-300">{{ user.full_name or user.username }}</span>
+                    </div>
+                    <a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="ml-1 text-sm font-medium text-white md:ml-2">Referrals Management</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-3xl font-bold text-white">Referrals Management</h2>
+                <p class="text-gray-300 mt-2">Search, filter, and manage medical referrals</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="refreshData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-refresh mr-2"></i>Refresh
+                </button>
+                <a href="/referral" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-plus mr-2"></i>New Referral
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Search & Filter</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <!-- Search Input -->
+                <div class="md:col-span-2">
+                    <label for="search-input" class="block text-sm font-medium text-gray-300 mb-2">Search</label>
+                    <input type="text" id="search-input" placeholder="Patient ID, Staff, Location..."
+                           class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                </div>
+                
+                <!-- Urgency Filter -->
+                <div>
+                    <label for="urgency-filter" class="block text-sm font-medium text-gray-300 mb-2">Urgency</label>
+                    <select id="urgency-filter" class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                        <option value="all">All Urgencies</option>
+                        <option value="Emergent">Emergent</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Routine">Routine</option>
+                    </select>
+                </div>
+                
+                <!-- Specialty Filter -->
+                <div>
+                    <label for="specialty-filter" class="block text-sm font-medium text-gray-300 mb-2">Specialty</label>
+                    <select id="specialty-filter" class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                        <option value="all">All Specialties</option>
+                        <option value="Emergency">Emergency</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Surgery">Surgery</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Obstetrics & Gynecology">O&G</option>
+                        <option value="Internal Medicine">Internal Med</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <!-- Date From -->
+                <div>
+                    <label for="date-from" class="block text-sm font-medium text-gray-300 mb-2">From Date</label>
+                    <input type="date" id="date-from"
+                           class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                </div>
+                
+                <!-- Date To -->
+                <div>
+                    <label for="date-to" class="block text-sm font-medium text-gray-300 mb-2">To Date</label>
+                    <input type="date" id="date-to"
+                           class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                </div>
+            </div>
+            
+            <div class="flex space-x-4 mt-4">
+                <button onclick="applyFilters()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-search mr-2"></i>Apply Filters
+                </button>
+                <button onclick="clearFilters()" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-times mr-2"></i>Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-white"><span id="total-count">0</span> referrals found</p>
+                    <p class="text-gray-300 text-sm" id="filter-summary">No filters applied</p>
+                </div>
+                <div class="flex space-x-2">
+                    <label class="text-sm text-gray-300">Sort by:</label>
+                    <select id="sort-by" class="bg-gray-800 text-gray-300 rounded px-2 py-1 border border-gray-600">
+                        <option value="referral_date">Date</option>
+                        <option value="urgency_level">Urgency</option>
+                        <option value="patient_id">Patient ID</option>
+                        <option value="specialty">Specialty</option>
+                    </select>
+                    <select id="sort-order" class="bg-gray-800 text-gray-300 rounded px-2 py-1 border border-gray-600">
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden text-center py-8">
+            <i class="fas fa-spinner fa-spin text-3xl text-blue-400"></i>
+            <p class="text-gray-300 mt-2">Loading referrals...</p>
+        </div>
+
+        <!-- Referrals Table -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-800/50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Patient ID</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date/Time</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Urgency</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Specialty</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Location</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Staff</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Case Summary</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referrals-table-body" class="bg-gray-800/30 divide-y divide-gray-700">
+                        <!-- Data populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden text-center py-12">
+            <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+            <h3 class="text-xl font-semibold text-white mb-2">No referrals found</h3>
+            <p class="text-gray-300">Try adjusting your search criteria or create a new referral.</p>
+        </div>
+
+        <!-- Referral Detail Modal -->
+        <div id="referral-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-white">Referral Details</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="referral-details-content">
+                    <!-- Details populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentData = [];
+        
+        // Load referrals data
+        async function loadReferrals(filters = {}) {
+            try {
+                document.getElementById('loading').classList.remove('hidden');
+                document.getElementById('no-results').classList.add('hidden');
+                
+                const params = new URLSearchParams();
+                Object.keys(filters).forEach(key => {
+                    if (filters[key] && filters[key] !== 'all') {
+                        params.append(key, filters[key]);
+                    }
+                });
+                
+                const response = await fetch(`/referrals/manage?${params}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentData = data.referrals;
+                    displayReferrals(currentData);
+                    updateSummary(data);
+                } else {
+                    showError('Error loading referrals: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+        
+        // Displaying referrals in table
+        function displayReferrals(referrals) {
+            const tbody = document.getElementById('referrals-table-body');
+            
+            if (referrals.length === 0) {
+                document.getElementById('no-results').classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+            
+            document.getElementById('no-results').classList.add('hidden');
+            
+            tbody.innerHTML = referrals.map(referral => `
+                <tr class="hover:bg-gray-700/50 transition-colors">
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">
+                        ${referral.patient_id}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                        <div>${referral.referral_date}</div>
+                        <div class="text-xs text-gray-400">${referral.referral_time}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm">
+                        <span class="px-2 py-1 text-xs rounded-full ${getUrgencyColor(referral.urgency_level)}">
+                            ${referral.urgency_level}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">${referral.specialty}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">${referral.referring_location}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">${referral.staff_name}</td>
+                    <td class="px-4 py-3 text-sm text-gray-300 max-w-xs truncate">${referral.cases_data}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm">
+                        <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(referral.status)}">
+                            ${referral.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                        <button onclick="viewDetails(${referral.id})" class="text-blue-400 hover:text-blue-300 mr-2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="editReferral(${referral.id})" class="text-green-400 hover:text-green-300">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Getting urgency color class
+        function getUrgencyColor(urgency) {
+            switch (urgency) {
+                case 'Emergent':
+                    return 'bg-red-600 text-white';
+                case 'Urgent':
+                    return 'bg-yellow-600 text-white';
+                case 'Routine':
+                    return 'bg-green-600 text-white';
+                default:
+                    return 'bg-gray-600 text-white';
+            }
+        }
+        
+        // Getting status color class
+        function getStatusColor(status) {
+            switch (status) {
+                case 'processed':
+                    return 'bg-green-600 text-white';
+                case 'pending':
+                    return 'bg-yellow-600 text-white';
+                case 'cancelled':
+                    return 'bg-red-600 text-white';
+                default:
+                    return 'bg-gray-600 text-white';
+            }
+        }
+        
+        // Update of summary information
+        function updateSummary(data) {
+            document.getElementById('total-count').textContent = data.total;
+            
+            const filters = data.filters_applied;
+            const appliedFilters = [];
+            
+            if (filters.search) appliedFilters.push(`Search: "${filters.search}"`);
+            if (filters.urgency_filter && filters.urgency_filter !== 'all') appliedFilters.push(`Urgency: ${filters.urgency_filter}`);
+            if (filters.specialty_filter && filters.specialty_filter !== 'all') appliedFilters.push(`Specialty: ${filters.specialty_filter}`);
+            if (filters.date_from) appliedFilters.push(`From: ${filters.date_from}`);
+            if (filters.date_to) appliedFilters.push(`To: ${filters.date_to}`);
+            
+            document.getElementById('filter-summary').textContent = 
+                appliedFilters.length > 0 ? appliedFilters.join(', ') : 'No filters applied';
+        }
+        
+        // Applying filters
+        function applyFilters() {
+            const filters = {
+                search: document.getElementById('search-input').value,
+                urgency_filter: document.getElementById('urgency-filter').value,
+                specialty_filter: document.getElementById('specialty-filter').value,
+                date_from: document.getElementById('date-from').value,
+                date_to: document.getElementById('date-to').value,
+                sort_by: document.getElementById('sort-by').value,
+                sort_order: document.getElementById('sort-order').value
+            };
+            
+            loadReferrals(filters);
+        }
+        
+        // Clearing filters
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('urgency-filter').value = 'all';
+            document.getElementById('specialty-filter').value = 'all';
+            document.getElementById('date-from').value = '';
+            document.getElementById('date-to').value = '';
+            document.getElementById('sort-by').value = 'referral_date';
+            document.getElementById('sort-order').value = 'desc';
+            
+            loadReferrals();
+        }
+        
+        // Refreshing data
+        function refreshData() {
+            applyFilters();
+        }
+        
+        // View referral details
+        function viewDetails(referralId) {
+            const referral = currentData.find(r => r.id === referralId);
+            if (referral) {
+                const modal = document.getElementById('referral-modal');
+                const content = document.getElementById('referral-details-content');
+                
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm text-gray-300">Patient ID:</label>
+                                <p class="text-white font-medium">${referral.patient_id}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-300">Date/Time:</label>
+                                <p class="text-white font-medium">${referral.referral_date} ${referral.referral_time}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-300">Urgency:</label>
+                                <span class="px-2 py-1 text-xs rounded-full ${getUrgencyColor(referral.urgency_level)}">
+                                    ${referral.urgency_level}
+                                </span>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-300">Specialty:</label>
+                                <p class="text-white font-medium">${referral.specialty}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-300">Referring Location:</label>
+                                <p class="text-white font-medium">${referral.referring_location}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-300">Staff Name:</label>
+                                <p class="text-white font-medium">${referral.staff_name}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-300">Case Data:</label>
+                            <div class="bg-gray-800/50 p-4 rounded-lg mt-2">
+                                <p class="text-white text-sm whitespace-pre-wrap">${referral.cases_data}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.remove('hidden');
+            }
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('referral-modal').classList.add('hidden');
+        }
+        
+        // Edit referral (placeholder)
+        function editReferral(referralId) {
+            alert('Edit functionality will be implemented. Referral ID: ' + referralId);
+        }
+        
+        // Show error message
+        function showError(message) {
+            alert('Error: ' + message);
+        }
+        
+        // Event listeners
+        document.getElementById('sort-by').addEventListener('change', applyFilters);
+        document.getElementById('sort-order').addEventListener('change', applyFilters);
+        
+        // Search on Enter key
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReferrals();
+        });
+    </script>
+</body>
+</html>

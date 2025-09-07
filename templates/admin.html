@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Medical Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-white font-sans">
+    <!-- Navigation Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-hospital text-2xl text-blue-400"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-semibold">Medical Referral System</h1>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/referral" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors">
+                        <i class="fas fa-clipboard-list mr-2"></i>Referrals
+                    </a>
+                    <a href="/admin" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </a>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm">
+                        <span class="text-gray-300">{{ user.full_name or user.username }}</span>
+                        <span class="text-yellow-400 ml-2">(Admin)</span>
+                    </div>
+                    <a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="ml-1 text-sm font-medium text-white md:ml-2">Admin Panel</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-3xl font-bold text-white">Admin Panel</h2>
+                <p class="text-gray-300 mt-2">System administration and user management</p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="/dashboard" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-home mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div id="message-container" class="hidden mb-6">
+            <div id="success-message" class="hidden p-4 bg-green-500/20 border border-green-500 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                    <p id="success-text" class="text-green-300"></p>
+                </div>
+            </div>
+            <div id="error-message" class="hidden p-4 bg-red-500/20 border border-red-500 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>
+                    <p id="error-text" class="text-red-300"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- User Management Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">User Management</h3>
+                        <p class="text-gray-300 text-sm">Create and manage staff accounts</p>
+                    </div>
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-users text-xl text-white"></i>
+                    </div>
+                </div>
+                <button onclick="showCreateUserForm()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors">
+                    <i class="fas fa-user-plus mr-2"></i>Create New User
+                </button>
+            </div>
+
+            <!-- System Statistics Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">System Statistics</h3>
+                        <p class="text-gray-300 text-sm">View system usage data</p>
+                    </div>
+                    <div class="bg-green-600 p-3 rounded-lg">
+                        <i class="fas fa-chart-bar text-xl text-white"></i>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Hospital ID:</span>
+                        <span class="text-white">{{ user.hospital_id }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Admin Role:</span>
+                        <span class="text-white">{{ user.role }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Department:</span>
+                        <span class="text-white">{{ user.department or 'Admin' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Info Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Hospital Info</h3>
+                        <p class="text-gray-300 text-sm">Current organization details</p>
+                    </div>
+                    <div class="bg-purple-600 p-3 rounded-lg">
+                        <i class="fas fa-hospital text-xl text-white"></i>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">System:</span>
+                        <span class="text-white">Medical Referral</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Version:</span>
+                        <span class="text-white">1.0.0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-300">Status:</span>
+                        <span class="text-green-400">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create User Form (Hidden by default) -->
+        <div id="create-user-form" class="hidden bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-4">Create New User Account</h3>
+            
+            <form id="user-creation-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                        <input type="text" id="username" name="username" required
+                               class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                        <input type="password" id="password" name="password" required
+                               class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="full_name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" required
+                               class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-300 mb-2">Department</label>
+                        <select id="department" name="department" required
+                                class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                            <option value="">Select Department</option>
+                            <option value="Emergency">Emergency</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Surgery">Surgery</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                            <option value="Internal Medicine">Internal Medicine</option>
+                            <option value="Nursing">Nursing</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-300 mb-2">Role</label>
+                        <select id="role" name="role" required
+                                class="w-full p-3 bg-gray-800 text-gray-300 rounded-lg border border-gray-600 focus:border-blue-500">
+                            <option value="staff">Staff</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="nurse">Nurse</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>Create User
+                    </button>
+                    <button type="button" onclick="hideCreateUserForm()" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+            <h3 class="text-xl font-semibold text-white mb-4">Recent System Activity</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-sign-in-alt text-purple-400 mr-3"></i>
+                        <div>
+                            <p class="text-white text-sm">Admin login</p>
+                            <p class="text-gray-400 text-xs">{{ user.username }} - Authentication</p>
+                        </div>
+                    </div>
+                    <span class="text-gray-400 text-xs">Now</span>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-clipboard-list text-green-400 mr-3"></i>
+                        <div>
+                            <p class="text-white text-sm">Referral system active</p>
+                            <p class="text-gray-400 text-xs">System ready for referrals</p>
+                        </div>
+                    </div>
+                    <span class="text-gray-400 text-xs">System status</span>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-database text-blue-400 mr-3"></i>
+                        <div>
+                            <p class="text-white text-sm">Database connected</p>
+                            <p class="text-gray-400 text-xs">Hospital: {{ user.hospital_id }}</p>
+                        </div>
+                    </div>
+                    <span class="text-gray-400 text-xs">Operational</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Show create user form
+        function showCreateUserForm() {
+            document.getElementById('create-user-form').classList.remove('hidden');
+            document.getElementById('create-user-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Hide create user form
+        function hideCreateUserForm() {
+            document.getElementById('create-user-form').classList.add('hidden');
+            document.getElementById('user-creation-form').reset();
+            hideMessages();
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            document.getElementById('success-text').textContent = message;
+            document.getElementById('success-message').classList.remove('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+            document.getElementById('message-container').classList.remove('hidden');
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            document.getElementById('error-message').classList.remove('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('message-container').classList.remove('hidden');
+        }
+
+        // Hide messages
+        function hideMessages() {
+            document.getElementById('message-container').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+        }
+
+        // Handle form submission
+        document.getElementById('user-creation-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            
+            try {
+                // Disable submit button during request
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating...';
+                
+                const response = await fetch('/admin/create-user', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showSuccess(`User "${result.username}" created successfully!`);
+                    this.reset();
+                    setTimeout(() => {
+                        hideCreateUserForm();
+                    }, 2000);
+                } else {
+                    showError(result.detail || 'Error creating user');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-save mr-2"></i>Create User';
+            }
+        });
+
+        // Hide messages after 5 seconds
+        setTimeout(() => {
+            hideMessages();
+        }, 5000);
+    </script>
+</body>
+</html>

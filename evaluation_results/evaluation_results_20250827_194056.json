@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-27T19:40:00.735193",
+    "base_url": "http://localhost:8000",
+    "evaluation_type": "FastAPI System Performance"
+  },
+  "server_connectivity": "SUCCESS",
+  "authentication_status": "SUCCESS",
+  "api_performance": {
+    "Dashboard": {
+      "mean_response_time_ms": 78.85,
+      "median_response_time_ms": 9.77,
+      "p95_response_time_ms": 29.64,
+      "success_rate": 0.0,
+      "error_rate": 100.0
+    },
+    "Referrals Management": {
+      "mean_response_time_ms": 87.24,
+      "median_response_time_ms": 12.95,
+      "p95_response_time_ms": 148.47,
+      "success_rate": 0.0,
+      "error_rate": 100.0
+    },
+    "Health Check": {
+      "mean_response_time_ms": 75.28,
+      "median_response_time_ms": 5.06,
+      "p95_response_time_ms": 25.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Root Endpoint": {
+      "mean_response_time_ms": 75.32,
+      "median_response_time_ms": 6.79,
+      "p95_response_time_ms": 12.44,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    }
+  },
+  "ai_analysis": {
+    "total_cases": 3,
+    "successful_analyses": 0,
+    "failed_analyses": 3,
+    "priority_correct": 0,
+    "processing_times": [
+      2031.174659729004,
+      17.87424087524414,
+      14.001846313476562
+    ],
+    "detailed_results": [],
+    "priority_accuracy": 0,
+    "avg_processing_time_ms": 0
+  },
+  "system_resources": {
+    "cpu_usage": {
+      "average_percent": 93.8,
+      "max_percent": 99.4
+    },
+    "memory_usage": {
+      "average_percent": 82.47,
+      "max_percent": 83.2
+    }
+  },
+  "benchmark_comparison": {
+    "overall_grade": "D - Needs Improvement",
+    "ai_performance": {
+      "accuracy": 0,
+      "grade": "Needs Improvement",
+      "avg_response_time": 0
+    }
+  }
+}

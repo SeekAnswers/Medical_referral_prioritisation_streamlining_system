@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-27T19:48:42.285672",
+    "base_url": "http://localhost:8000",
+    "evaluation_type": "FastAPI System Performance"
+  },
+  "server_connectivity": "SUCCESS",
+  "authentication_status": "SUCCESS",
+  "api_performance": {
+    "Dashboard": {
+      "mean_response_time_ms": 79.94,
+      "median_response_time_ms": 10.0,
+      "p95_response_time_ms": 32.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Referrals Management": {
+      "mean_response_time_ms": 91.25,
+      "median_response_time_ms": 16.05,
+      "p95_response_time_ms": 115.74,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Health Check": {
+      "mean_response_time_ms": 74.85,
+      "median_response_time_ms": 6.5,
+      "p95_response_time_ms": 14.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Root Endpoint": {
+      "mean_response_time_ms": 73.16,
+      "median_response_time_ms": 5.0,
+      "p95_response_time_ms": 9.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    }
+  },
+  "ai_analysis": {
+    "total_cases": 20,
+    "successful_analyses": 20,
+    "failed_analyses": 0,
+    "priority_correct": 9,
+    "processing_times": [
+      7498.608589172363,
+      5055.870771408081,
+      5713.028430938721,
+      4907.455921173096,
+      4752.936124801636,
+      5343.335151672363,
+      4890.348672866821,
+      5526.678800582886,
+      4992.794752120972,
+      5746.330499649048,
+      4827.507019042969,
+      4937.1888637542725,
+      4601.889848709106,
+      4806.514501571655,
+      5776.490926742554,
+      5275.670528411865,
+      5431.098699569702,
+      5668.880224227905,
+      5179.619789123535,
+      5546.022176742554
+    ],
+    "detailed_results": [
+      {
+        "case_id": "URGENT_001",
+        "ai_priority": "Emergent",
+        "ground_truth": "emergent",
+        "correct": true,
+        "processing_time_ms": 7498.608589172363
+      },
+      {
+        "case_id": "ROUTINE_001",
+        "ai_priority": "Emergent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 5055.870771408081
+      },
+      {
+        "case_id": "URGENT_002",
+        "ai_priority": "Emergent",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 5713.028430938721
+      },
+      {
+        "case_id": "EMERGENT_002",
+        "ai_priority": "Emergent",
+        "ground_truth": "emergent",
+        "correct": true,
+        "processing_time_ms": 4907.455921173096
+      },
+      {
+        "case_id": "ROUTINE_002",
+        "ai_priority": "Urgent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 4752.936124801636
+      },
+      {
+        "case_id": "URGENT_003",
+        "ai_priority": "Urgent",
+        "ground_truth": "urgent",
+        "correct": true,
+        "processing_time_ms": 5343.335151672363
+      },
+      {
+        "case_id": "ROUTINE_003",
+        "ai_priority": "Emergent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 4890.348672866821
+      },
+      {
+        "case_id": "URGENT_004",
+        "ai_priority": "Emergent",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 5526.678800582886
+      },
+      {
+        "case_id": "ROUTINE_004",
+        "ai_priority": "Emergent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 4992.794752120972
+      },
+      {
+        "case_id": "EMERGENT_003",
+        "ai_priority": "Emergent",
+        "ground_truth": "emergent",
+        "correct": true,
+        "processing_time_ms": 5746.330499649048
+      },
+      {
+        "case_id": "URGENT_005",
+        "ai_priority": "Emergent",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 4827.507019042969
+      },
+      {
+        "case_id": "ROUTINE_005",
+        "ai_priority": "Routine",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 4937.1888637542725
+      },
+      {
+        "case_id": "URGENT_006",
+        "ai_priority": "Urgent",
+        "ground_truth": "urgent",
+        "correct": true,
+        "processing_time_ms": 4601.889848709106
+      },
+      {
+        "case_id": "ROUTINE_006",
+        "ai_priority": "Routine",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 4806.514501571655
+      },
+      {
+        "case_id": "URGENT_007",
+        "ai_priority": "Emergent",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 5776.490926742554
+      },
+      {
+        "case_id": "ROUTINE_007",
+        "ai_priority": "Emergent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 5275.670528411865
+      },
+      {
+        "case_id": "URGENT_008",
+        "ai_priority": "Emergent",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 5431.098699569702
+      },
+      {
+        "case_id": "ROUTINE_008",
+        "ai_priority": "Routine",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 5668.880224227905
+      },
+      {
+        "case_id": "URGENT_009",
+        "ai_priority": "Urgent",
+        "ground_truth": "urgent",
+        "correct": true,
+        "processing_time_ms": 5179.619789123535
+      },
+      {
+        "case_id": "ROUTINE_009",
+        "ai_priority": "Emergent",
+        "ground_truth": "routine",
+        "correct": false,
+        "processing_time_ms": 5546.022176742554
+      }
+    ],
+    "priority_accuracy": 45.0,
+    "avg_processing_time_ms": 5323.91
+  },
+  "system_resources": {
+    "cpu_usage": {
+      "average_percent": 93.77,
+      "max_percent": 100.0
+    },
+    "memory_usage": {
+      "average_percent": 81.81,
+      "max_percent": 83.2
+    }
+  },
+  "benchmark_comparison": {
+    "overall_grade": "D - Needs Improvement",
+    "ai_performance": {
+      "accuracy": 45.0,
+      "grade": "Needs Improvement",
+      "avg_response_time": 5323.91
+    }
+  }
+}

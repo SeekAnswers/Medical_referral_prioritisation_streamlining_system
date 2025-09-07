@@ -1,0 +1,549 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-27T20:51:44.695475",
+    "base_url": "http://localhost:8000",
+    "evaluation_type": "FastAPI System Performance"
+  },
+  "server_connectivity": "SUCCESS",
+  "authentication_status": "SUCCESS",
+  "api_performance": {
+    "Dashboard": {
+      "mean_response_time_ms": 79.95,
+      "median_response_time_ms": 11.0,
+      "p95_response_time_ms": 20.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Referrals Management": {
+      "mean_response_time_ms": 113.11,
+      "median_response_time_ms": 44.27,
+      "p95_response_time_ms": 56.18,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Health Check": {
+      "mean_response_time_ms": 72.33,
+      "median_response_time_ms": 4.0,
+      "p95_response_time_ms": 9.29,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    },
+    "Root Endpoint": {
+      "mean_response_time_ms": 73.68,
+      "median_response_time_ms": 6.0,
+      "p95_response_time_ms": 11.0,
+      "success_rate": 100.0,
+      "error_rate": 0.0
+    }
+  },
+  "ai_analysis": {
+    "total_cases": 60,
+    "successful_analyses": 60,
+    "failed_analyses": 0,
+    "priority_correct": 25,
+    "processing_times": [
+      3715.297222137451,
+      1951.1899948120117,
+      1996.9053268432617,
+      1604.1131019592285,
+      1696.4542865753174,
+      1855.0817966461182,
+      1765.5889987945557,
+      1870.8617687225342,
+      1714.66064453125,
+      1688.2777214050293,
+      1772.810459136963,
+      1731.6758632659912,
+      1733.4136962890625,
+      1728.4364700317383,
+      1766.4687633514404,
+      1756.1419010162354,
+      1769.6919441223145,
+      1774.4343280792236,
+      1649.585485458374,
+      1797.0495223999023,
+      1713.1288051605225,
+      1592.1423435211182,
+      1816.0271644592285,
+      1758.6009502410889,
+      1738.3475303649902,
+      1921.0195541381836,
+      1904.7975540161133,
+      1601.9599437713623,
+      1772.885799407959,
+      1780.5066108703613,
+      1714.1673564910889,
+      1705.6770324707031,
+      1712.1527194976807,
+      1679.2967319488525,
+      1762.1848583221436,
+      1767.5421237945557,
+      1904.341697692871,
+      1880.8724880218506,
+      1612.596035003662,
+      1812.6552104949951,
+      1694.5466995239258,
+      1874.2027282714844,
+      1851.6225814819336,
+      1709.2468738555908,
+      1797.5139617919922,
+      1771.7514038085938,
+      1770.2207565307617,
+      1653.2647609710693,
+      1727.5002002716064,
+      1855.2329540252686,
+      1711.3444805145264,
+      1764.4760608673096,
+      1794.6887016296387,
+      1760.0364685058594,
+      1734.6086502075195,
+      1771.6505527496338,
+      1831.3772678375244,
+      1706.533670425415,
+      1648.0224132537842,
+      1660.330057144165
+    ],
+    "detailed_results": [
+      {
+        "case_id": "URGENT_001",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 3715.297222137451
+      },
+      {
+        "case_id": "ROUTINE_001",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1951.1899948120117
+      },
+      {
+        "case_id": "URGENT_002",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1996.9053268432617
+      },
+      {
+        "case_id": "EMERGENT_002",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1604.1131019592285
+      },
+      {
+        "case_id": "ROUTINE_002",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1696.4542865753174
+      },
+      {
+        "case_id": "URGENT_003",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1855.0817966461182
+      },
+      {
+        "case_id": "ROUTINE_003",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1765.5889987945557
+      },
+      {
+        "case_id": "URGENT_004",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1870.8617687225342
+      },
+      {
+        "case_id": "ROUTINE_004",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1714.66064453125
+      },
+      {
+        "case_id": "EMERGENT_003",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1688.2777214050293
+      },
+      {
+        "case_id": "URGENT_005",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1772.810459136963
+      },
+      {
+        "case_id": "ROUTINE_005",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1731.6758632659912
+      },
+      {
+        "case_id": "URGENT_006",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1733.4136962890625
+      },
+      {
+        "case_id": "ROUTINE_006",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1728.4364700317383
+      },
+      {
+        "case_id": "URGENT_007",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1766.4687633514404
+      },
+      {
+        "case_id": "ROUTINE_007",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1756.1419010162354
+      },
+      {
+        "case_id": "URGENT_008",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1769.6919441223145
+      },
+      {
+        "case_id": "ROUTINE_008",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1774.4343280792236
+      },
+      {
+        "case_id": "URGENT_009",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1649.585485458374
+      },
+      {
+        "case_id": "ROUTINE_009",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1797.0495223999023
+      },
+      {
+        "case_id": "EMERGENT_004",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1713.1288051605225
+      },
+      {
+        "case_id": "URGENT_010",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1592.1423435211182
+      },
+      {
+        "case_id": "ROUTINE_010",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1816.0271644592285
+      },
+      {
+        "case_id": "EMERGENT_005",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1758.6009502410889
+      },
+      {
+        "case_id": "URGENT_011",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1738.3475303649902
+      },
+      {
+        "case_id": "ROUTINE_011",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1921.0195541381836
+      },
+      {
+        "case_id": "URGENT_012",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1904.7975540161133
+      },
+      {
+        "case_id": "ROUTINE_012",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1601.9599437713623
+      },
+      {
+        "case_id": "EMERGENT_006",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1772.885799407959
+      },
+      {
+        "case_id": "URGENT_013",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1780.5066108703613
+      },
+      {
+        "case_id": "ROUTINE_013",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1714.1673564910889
+      },
+      {
+        "case_id": "URGENT_014",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1705.6770324707031
+      },
+      {
+        "case_id": "ROUTINE_014",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1712.1527194976807
+      },
+      {
+        "case_id": "EMERGENT_007",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1679.2967319488525
+      },
+      {
+        "case_id": "URGENT_015",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1762.1848583221436
+      },
+      {
+        "case_id": "ROUTINE_015",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1767.5421237945557
+      },
+      {
+        "case_id": "URGENT_016",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1904.341697692871
+      },
+      {
+        "case_id": "ROUTINE_016",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1880.8724880218506
+      },
+      {
+        "case_id": "EMERGENT_008",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1612.596035003662
+      },
+      {
+        "case_id": "URGENT_017",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1812.6552104949951
+      },
+      {
+        "case_id": "ROUTINE_017",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1694.5466995239258
+      },
+      {
+        "case_id": "URGENT_018",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1874.2027282714844
+      },
+      {
+        "case_id": "ROUTINE_018",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1851.6225814819336
+      },
+      {
+        "case_id": "EMERGENT_009",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1709.2468738555908
+      },
+      {
+        "case_id": "URGENT_019",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1797.5139617919922
+      },
+      {
+        "case_id": "ROUTINE_019",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1771.7514038085938
+      },
+      {
+        "case_id": "URGENT_020",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1770.2207565307617
+      },
+      {
+        "case_id": "ROUTINE_020",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1653.2647609710693
+      },
+      {
+        "case_id": "EMERGENT_010",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1727.5002002716064
+      },
+      {
+        "case_id": "URGENT_021",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1855.2329540252686
+      },
+      {
+        "case_id": "ROUTINE_021",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1711.3444805145264
+      },
+      {
+        "case_id": "URGENT_022",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1764.4760608673096
+      },
+      {
+        "case_id": "ROUTINE_022",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1794.6887016296387
+      },
+      {
+        "case_id": "EMERGENT_011",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1760.0364685058594
+      },
+      {
+        "case_id": "URGENT_023",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1734.6086502075195
+      },
+      {
+        "case_id": "ROUTINE_023",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1771.6505527496338
+      },
+      {
+        "case_id": "URGENT_024",
+        "ai_priority": "Unknown",
+        "ground_truth": "urgent",
+        "correct": false,
+        "processing_time_ms": 1831.3772678375244
+      },
+      {
+        "case_id": "ROUTINE_024",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1706.533670425415
+      },
+      {
+        "case_id": "EMERGENT_012",
+        "ai_priority": "Unknown",
+        "ground_truth": "emergent",
+        "correct": false,
+        "processing_time_ms": 1648.0224132537842
+      },
+      {
+        "case_id": "ROUTINE_025",
+        "ai_priority": "Unknown",
+        "ground_truth": "routine",
+        "correct": true,
+        "processing_time_ms": 1660.330057144165
+      }
+    ],
+    "priority_accuracy": 41.67,
+    "avg_processing_time_ms": 1792.95
+  },
+  "system_resources": {
+    "cpu_usage": {
+      "average_percent": 94.88,
+      "max_percent": 100.0
+    },
+    "memory_usage": {
+      "average_percent": 85.8,
+      "max_percent": 87.2
+    }
+  },
+  "benchmark_comparison": {
+    "overall_grade": "D - Needs Improvement",
+    "ai_performance": {
+      "accuracy": 41.67,
+      "grade": "Needs Improvement",
+      "avg_response_time": 1792.95
+    }
+  }
+}

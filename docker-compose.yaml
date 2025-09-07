@@ -1,0 +1,139 @@
+# version: "3.8"
+
+services:
+  # API Gateway (Traefik)
+  traefik:
+    image: traefik:v2.10
+    container_name: medical_traefik
+    restart: unless-stopped
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true" 
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8081:8080" # Traefik dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+    networks:
+      - traefik-public
+
+  # Main Medical Referral Application
+  medical-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medical_referral_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-secure_password}@db:5432/${DB_NAME:-medical_db}
+      - SECRET_KEY=${SECRET_KEY:-your_secret_key_change_in_production}
+      - REDIS_URL=redis://cache:6379
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - traefik-public
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.medical-app.rule=Host(`medical.localhost`)"
+      - "traefik.http.routers.medical-app.entrypoints=web"
+      - "traefik.http.services.medical-app.loadbalancer.server.port=8000"
+      - "traefik.http.services.medical-app.loadbalancer.server.scheme=http"
+      - "traefik.docker.network=best_treatment_recommendation_system_in_cases_transi_to_hospi_traefik-public"
+      - "traefik.http.services.medical-app.loadbalancer.healthcheck.path=/health"
+
+  # Database
+  db:
+    image: postgres:15-alpine
+    container_name: medical_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secure_password}
+      - POSTGRES_DB=${DB_NAME:-medical_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Cache
+  cache:
+    image: redis:7-alpine
+    container_name: medical_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Object Storage
+  minio:
+    image: minio/minio:latest
+    container_name: medical_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    # DIRECT PORT EXPOSURE
+    ports:
+      - "9000:9000" # MinIO API
+      - "9001:9001" # MinIO Console
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-minioadmin123}
+    volumes:
+      - minio_data:/data
+    networks:
+      - backend
+      - traefik-public
+    # ADD HEALTH CHECK
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minio.rule=Host(`storage.localhost`)"
+      - "traefik.http.routers.minio.entrypoints=web"
+      - "traefik.http.services.minio.loadbalancer.server.port=9001"
+      - "traefik.http.services.minio.loadbalancer.server.scheme=http"
+      - "traefik.docker.network=best_treatment_recommendation_system_in_cases_transi_to_hospi_traefik-public"
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  letsencrypt:
+
+networks:
+  traefik-public:
+  backend:

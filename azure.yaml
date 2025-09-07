@@ -1,0 +1,11 @@
+name: medical-image-analysis
+services:
+  medical-image-analysis:
+    language: python
+    project: .
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .
+    bindings:
+      - port: 80
