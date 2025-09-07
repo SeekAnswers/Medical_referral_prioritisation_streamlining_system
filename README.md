@@ -44,10 +44,12 @@ Builds and starts all the services
    This as well builds and starts all the services
    i. Open the directory in powershell terminal, Git Bash or WSL terminal. 
    ii. Run:
-      ```./deploy.sh
+   ```bash
+   ./deploy.sh
    ````
    If on Windows, you can as well use:  
-   ```bash ./deploy.sh
+   ```bash
+   bash ./deploy.sh
    ````
     after opening cloned directory in PowerShell terminal.
 
